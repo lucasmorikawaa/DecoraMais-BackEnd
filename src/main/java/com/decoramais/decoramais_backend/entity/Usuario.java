@@ -5,57 +5,41 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+
 
 @Entity
+@Table(name = "usuarios")
+@Getter
+@Setter
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario {
+    
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable =false)
     private Long id;
 
+    @NotBlank
     @Column(name = "nome", nullable =false)
     private String nome;
-    
+
+    @NotBlank    
     @Column(name = "email", nullable =false, unique =true)
     private String email;
 
+    @NotBlank
     @Column(name = "senha", nullable =false)
     private String senha;
 
     @Column(name = "tipo", nullable = false)
     private String tipo;
-    
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getSenha() {
-        return senha;
-    }
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-    public String getTipo() {
-        return tipo;
-    }
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
 
     
 }
