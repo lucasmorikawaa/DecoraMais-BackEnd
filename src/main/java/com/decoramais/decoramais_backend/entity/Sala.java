@@ -6,9 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Table(name = "Sala")
 @Entity
+@Getter
+@Setter
 public class Sala {
 
     @Id
@@ -22,45 +26,5 @@ public class Sala {
 
     @Column(unique = true)
     private String codigConvite;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Integer getAno() {
-        return ano;
-    }
-
-    public void setAno(Integer ano) {
-        this.ano = ano;
-    }
-
-    public String getDisciplina() {
-        return disciplina;
-    }
-
-    public void setDisciplina(String disciplina) {
-        this.disciplina = disciplina;
-    }
-
-    public String getCodigConvite() {
-        return codigConvite;
-    }
-
-    public void setCodigConvite(String codigConvite) {
-        this.codigConvite = codigConvite;
-    }
 
 }
