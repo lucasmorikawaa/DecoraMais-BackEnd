@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +21,10 @@ public class Sala {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @NotBlank(message = "O nome da sala não pode estar em branco")
     private String nome;
     private Integer ano;
+    @NotBlank(message = "A disciplina é obrigatória")
     private String disciplina;
 
     @Column(unique = true)

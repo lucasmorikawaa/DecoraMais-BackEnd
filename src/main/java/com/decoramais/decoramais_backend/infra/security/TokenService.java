@@ -1,4 +1,4 @@
-package com.decoramais.decoramais_backend.security;
+package com.decoramais.decoramais_backend.infra.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
