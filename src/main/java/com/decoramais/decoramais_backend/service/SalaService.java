@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.decoramais.decoramais_backend.dto.SalaRepository;
 import com.decoramais.decoramais_backend.entity.Sala;
+import com.decoramais.decoramais_backend.repository.SalaRepository;
 
 @Service
 public class SalaService {
