@@ -5,10 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.UUID;
 
 @Table(name = "Sala")
 @Entity
@@ -29,5 +31,12 @@ public class Sala {
 
     @Column(unique = true)
     private String codigConvite;
+
+    @PrePersist
+    public void gerarCodigo() {
+        if (this.codigConvite == null) {
+            this.codigConvite = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        }
+    }
 
 }
