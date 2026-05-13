@@ -2,8 +2,12 @@ package com.decoramais.decoramais_backend.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.decoramais.decoramais_backend.entity.Aluno;
 import com.decoramais.decoramais_backend.entity.Sala;
+import com.decoramais.decoramais_backend.repository.AlunoRepository;
 import com.decoramais.decoramais_backend.repository.SalaRepository;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -45,5 +49,22 @@ public class SalaService {
             throw new EntityNotFoundException("Sala não encontrada");
         }
         salaRepository.deleteById(id);
+    }
+
+    @Autowired
+    private AlunoRepository alunoRepository;
+
+    public void vincularAluno(String codigo, Long alunoId) {
+
+        Sala sala = salaRepository.findByCodigConvite(codigo)
+                .orElseThrow(() -> new EntityNotFoundException("Código de convite inválido"));
+
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado"));
+
+        if (!sala.getAlunos().contains(aluno)) {
+            sala.getAlunos().add(aluno);
+            salaRepository.save(sala);
+        }
     }
 }

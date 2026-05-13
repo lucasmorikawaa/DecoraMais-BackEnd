@@ -14,7 +14,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/salas")
 public class SalaController {
-    
+
     private final SalaService salaService;
 
     public SalaController(SalaService salaService) {
@@ -49,5 +49,11 @@ public class SalaController {
     public ResponseEntity<Void> deleteSala(@PathVariable Long id) {
         salaService.deleteSala(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/ingressar")
+    public ResponseEntity<String> ingressarNaSala(@RequestParam String codigo, @RequestParam Long alunoId) {
+        salaService.vincularAluno(codigo, alunoId);
+        return ResponseEntity.ok("Aluno vinculado com sucesso à sala!");
     }
 }
