@@ -16,5 +16,9 @@ public class Aluno extends Usuario {
 
     @ManyToMany(mappedBy = "alunos")
     private List<Sala> salas;
+
+    private Integer xp = 0;
+    private Integer ofensiva = 0;
+    private java.time.LocalDate dataUltimoEstudo;
     
 }

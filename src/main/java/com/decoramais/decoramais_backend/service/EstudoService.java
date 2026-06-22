@@ -8,6 +8,8 @@ import com.decoramais.decoramais_backend.repository.AlunoRepository;
 import com.decoramais.decoramais_backend.repository.FlashcardRepository;
 import com.decoramais.decoramais_backend.repository.ProgressoFlashcardRepository;
 import jakarta.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +18,16 @@ import java.time.LocalDate;
 @Service
 public class EstudoService {
 
+    @Autowired
+    private GamificationService gamificationService;
+
     private final ProgressoFlashcardRepository progressoRepository;
     private final AlunoRepository alunoRepository;
     private final FlashcardRepository flashcardRepository;
 
-    public EstudoService(ProgressoFlashcardRepository progressoRepository, 
-                          AlunoRepository alunoRepository, 
-                          FlashcardRepository flashcardRepository) {
+    public EstudoService(ProgressoFlashcardRepository progressoRepository,
+            AlunoRepository alunoRepository,
+            FlashcardRepository flashcardRepository) {
         this.progressoRepository = progressoRepository;
         this.alunoRepository = alunoRepository;
         this.flashcardRepository = flashcardRepository;
@@ -53,7 +58,7 @@ public class EstudoService {
             rep++;
         }
         ef = ef + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
-        
+
         if (ef < 1.3) {
             ef = 1.3;
         }
@@ -62,7 +67,11 @@ public class EstudoService {
         progresso.setIntervaloDias(intervalo);
         progresso.setDataProximaRevisao(LocalDate.now().plusDays(intervalo));
 
-        return progressoRepository.save(progresso);
+        ProgressoFlashcard resultado = progressoRepository.save(progresso);
+
+        gamificationService.processarGamificacao(progresso.getAluno());
+
+        return resultado;
     }
 
     private ProgressoFlashcard inicializarNovoProgresso(Long alunoId, Long flashcardId) {
