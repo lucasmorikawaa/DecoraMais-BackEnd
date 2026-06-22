@@ -2,39 +2,58 @@ package com.decoramais.decoramais_backend.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.decoramais.decoramais_backend.entity.Sala;
 import com.decoramais.decoramais_backend.service.SalaService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/salas")
 public class SalaController {
+
     private final SalaService salaService;
 
     public SalaController(SalaService salaService) {
         this.salaService = salaService;
     }
 
-    public List<Sala> getAllSalas() {
-        return salaService.getAllSalas();
+    @GetMapping
+    public ResponseEntity<List<Sala>> getAllSalas() {
+        List<Sala> salas = salaService.getAllSalas();
+        return ResponseEntity.ok(salas);
     }
 
-    public Sala getSalaById(Long id) {
-        return salaService.getSalaById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Sala> getSalaById(@PathVariable Long id) {
+        Sala sala = salaService.getSalaById(id);
+        return ResponseEntity.ok(sala);
     }
 
-    public Sala createSala(Sala sala) {
-        return salaService.createSala(sala);
+    @PostMapping
+    public ResponseEntity<Sala> createSala(@RequestBody @Valid Sala sala) {
+        Sala novaSala = salaService.createSala(sala);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novaSala);
     }
 
-    public Sala updateSala(Long id, Sala sala) {
-        return salaService.updateSala(id, sala);
+    @PutMapping("/{id}")
+    public ResponseEntity<Sala> updateSala(@PathVariable Long id, @RequestBody @Valid Sala sala) {
+        Sala salaAtualizada = salaService.updateSala(id, sala);
+        return ResponseEntity.ok(salaAtualizada);
     }
 
-    public void deleteSala(Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSala(@PathVariable Long id) {
         salaService.deleteSala(id);
+        return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/ingressar")
+    public ResponseEntity<String> ingressarNaSala(@RequestParam String codigo, @RequestParam Long alunoId) {
+        salaService.vincularAluno(codigo, alunoId);
+        return ResponseEntity.ok("Aluno vinculado com sucesso à sala!");
+    }
 }
