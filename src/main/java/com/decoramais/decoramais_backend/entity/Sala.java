@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -37,6 +38,10 @@ public class Sala {
     @Column(unique = true)
     private String codigConvite;
 
+    @ManyToOne
+    @JoinColumn(name = "professor_id")
+    private Professor professor;
+
     @PrePersist
     public void gerarCodigo() {
         if (this.codigConvite == null) {
@@ -45,7 +50,11 @@ public class Sala {
     }
 
     @ManyToMany
-    @JoinTable(name = "sala_alunos", joinColumns = @JoinColumn(name = "sala_id"), inverseJoinColumns = @JoinColumn(name = "aluno_id"))
+    @JoinTable(
+        name = "sala_alunos", 
+        joinColumns = @JoinColumn(name = "sala_id"), 
+        inverseJoinColumns = @JoinColumn(name = "aluno_id")
+    )
     private List<Aluno> alunos;
 
 }
