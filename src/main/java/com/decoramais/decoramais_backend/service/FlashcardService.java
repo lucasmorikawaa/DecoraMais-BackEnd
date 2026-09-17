@@ -1,6 +1,6 @@
 package com.decoramais.decoramais_backend.service;
 
-import com.decoramais.decoramais_backend.dto.FlashcardRequestDTO;
+import com.decoramais.decoramais_backend.dto.flashcard.FlashcardRequestDTO;
 import com.decoramais.decoramais_backend.entity.Flashcard;
 import com.decoramais.decoramais_backend.entity.Sala;
 import com.decoramais.decoramais_backend.repository.FlashcardRepository;

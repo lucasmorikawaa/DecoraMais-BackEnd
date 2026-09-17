@@ -1,6 +1,6 @@
 package com.decoramais.decoramais_backend.service;
 
-import com.decoramais.decoramais_backend.dto.AvaliacaoFlashcardDTO;
+import com.decoramais.decoramais_backend.dto.flashcard.AvaliacaoFlashcardDTO;
 import com.decoramais.decoramais_backend.entity.Aluno;
 import com.decoramais.decoramais_backend.entity.Flashcard;
 import com.decoramais.decoramais_backend.entity.ProgressoFlashcard;

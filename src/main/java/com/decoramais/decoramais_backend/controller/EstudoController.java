@@ -1,6 +1,6 @@
 package com.decoramais.decoramais_backend.controller;
 
-import com.decoramais.decoramais_backend.dto.AvaliacaoFlashcardDTO;
+import com.decoramais.decoramais_backend.dto.flashcard.AvaliacaoFlashcardDTO;
 import com.decoramais.decoramais_backend.entity.ProgressoFlashcard;
 import com.decoramais.decoramais_backend.service.EstudoService;
 import jakarta.validation.Valid;

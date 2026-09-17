@@ -25,7 +25,7 @@ public class Usuario implements UserDetails {
     @NotBlank
     private String nome;
 
-    @NotBlank    
+    @NotBlank
     @Column(unique = true)
     private String email;
 
@@ -37,27 +37,53 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.tipo.equalsIgnoreCase("PROFESSOR")) {
-            return List.of(new SimpleGrantedAuthority("ROLE_PROFESSOR"), new SimpleGrantedAuthority("ROLE_ALUNO"));
+
+        if (this.tipo == null) {
+            return List.of();
         }
-        return List.of(new SimpleGrantedAuthority("ROLE_ALUNO"));
+
+        if (this.tipo.equalsIgnoreCase("PROFESSOR")) {
+
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_PROFESSOR"));
+        }
+
+        if (this.tipo.equalsIgnoreCase("ALUNO")) {
+
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ALUNO"));
+        }
+
+        return List.of();
     }
 
     @Override
-    public String getPassword() { return senha; }
+    public String getPassword() {
+        return senha;
+    }
 
     @Override
-    public String getUsername() { return email; }
+    public String getUsername() {
+        return email;
+    }
 
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() {
+        return true;
+    }
 }

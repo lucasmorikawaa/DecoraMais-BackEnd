@@ -1,4 +1,4 @@
-package com.decoramais.decoramais_backend.dto;
+package com.decoramais.decoramais_backend.dto.flashcard;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

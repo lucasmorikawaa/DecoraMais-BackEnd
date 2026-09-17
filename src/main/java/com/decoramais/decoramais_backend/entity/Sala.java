@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,11 +51,7 @@ public class Sala {
     }
 
     @ManyToMany
-    @JoinTable(
-        name = "sala_alunos", 
-        joinColumns = @JoinColumn(name = "sala_id"), 
-        inverseJoinColumns = @JoinColumn(name = "aluno_id")
-    )
-    private List<Aluno> alunos;
+    @JoinTable(name = "sala_alunos", joinColumns = @JoinColumn(name = "sala_id"), inverseJoinColumns = @JoinColumn(name = "aluno_id"))
+    private List<Aluno> alunos = new ArrayList<>();
 
 }

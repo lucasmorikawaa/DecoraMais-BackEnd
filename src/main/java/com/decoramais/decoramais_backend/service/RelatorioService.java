@@ -1,6 +1,6 @@
 package com.decoramais.decoramais_backend.service;
 
-import com.decoramais.decoramais_backend.dto.CardDificilDTO;
+import com.decoramais.decoramais_backend.dto.flashcard.CardDificilDTO;
 import com.decoramais.decoramais_backend.dto.RelatorioTurmaDTO;
 import com.decoramais.decoramais_backend.entity.Sala;
 import com.decoramais.decoramais_backend.repository.ProgressoFlashcardRepository;
@@ -22,7 +22,7 @@ public class RelatorioService {
     }
 
     public RelatorioTurmaDTO gerarRelatorioDaTurma(Long salaId) {
-        // 1. Validar se a sala existe
+        
         Sala sala = salaRepository.findById(salaId)
                 .orElseThrow(() -> new EntityNotFoundException("Sala não encontrada com o ID: " + salaId));
 
@@ -35,7 +35,7 @@ public class RelatorioService {
 
         List<CardDificilDTO> cardsDificeis = progressoRepository.findCardsMaisDificeisPorSala(salaId);
         if (cardsDificeis.size() > 5) {
-            cardsDificeis = cardsDificeis.subList(0, 5); // Limita aos 5 piores
+            cardsDificeis = cardsDificeis.subList(0, 5);
         }
 
         return new RelatorioTurmaDTO(

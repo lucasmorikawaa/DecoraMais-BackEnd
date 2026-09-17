@@ -1,4 +1,4 @@
-package com.decoramais.decoramais_backend.dto;
+package com.decoramais.decoramais_backend.dto.flashcard;
 
 public record CardDificilDTO(
     Long cardId,

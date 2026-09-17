@@ -1,4 +1,4 @@
-package com.decoramais.decoramais_backend.infra.exception;
+package com.decoramais.decoramais_backend.exception;
 
 import org.springframework.validation.FieldError;
 

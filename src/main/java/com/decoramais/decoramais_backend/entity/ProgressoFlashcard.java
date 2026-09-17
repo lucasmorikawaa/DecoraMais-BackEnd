@@ -3,10 +3,19 @@ package com.decoramais.decoramais_backend.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "progresso_flashcards")
+@Table(
+    name = "progresso_flashcards",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_aluno_flashcard",
+            columnNames = {"aluno_id", "flashcard_id"}
+        )
+    }
+)
 @Getter
 @Setter
 public class ProgressoFlashcard {
@@ -30,4 +39,5 @@ public class ProgressoFlashcard {
     private Integer intervaloDias = 0;
 
     private LocalDate dataProximaRevisao = LocalDate.now();
+
 }
