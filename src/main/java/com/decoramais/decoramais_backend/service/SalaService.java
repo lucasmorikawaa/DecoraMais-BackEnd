@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.access.AccessDeniedException;
 import com.decoramais.decoramais_backend.entity.Aluno;
 import com.decoramais.decoramais_backend.entity.Professor;
 import com.decoramais.decoramais_backend.entity.Sala;
@@ -36,28 +37,30 @@ public class SalaService {
 
     public Sala getSalaById(Long id) {
         return salaRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException(
-                                "Sala não encontrada com o ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Sala não encontrada com o ID: " + id));
     }
 
     public Sala createSala(Sala sala, Long professorId) {
 
         Professor professor = professorRepository.findById(professorId)
-                .orElseThrow(() ->
-                        new EntityNotFoundException(
-                                "Professor não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Professor não encontrado"));
 
         sala.setProfessor(professor);
 
         return salaRepository.save(sala);
     }
 
-    public Sala updateSala(Long id, Sala salaRequest) {
+    public Sala updateSala(
+            Long id,
+            Sala salaRequest,
+            Long professorId) {
+
+        validarProfessorDaSala(id, professorId);
 
         Sala existingSala = salaRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Sala não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Sala não encontrada"));
 
         existingSala.setNome(salaRequest.getNome());
         existingSala.setDisciplina(salaRequest.getDisciplina());
@@ -66,11 +69,9 @@ public class SalaService {
         return salaRepository.save(existingSala);
     }
 
-    public void deleteSala(Long id) {
+    public void deleteSala(Long id, Long professorId) {
 
-        if (!salaRepository.existsById(id)) {
-            throw new EntityNotFoundException("Sala não encontrada");
-        }
+        validarProfessorDaSala(id, professorId);
 
         salaRepository.deleteById(id);
     }
@@ -78,18 +79,29 @@ public class SalaService {
     public void vincularAluno(String codigo, Long alunoId) {
 
         Sala sala = salaRepository.findByCodigConvite(codigo)
-                .orElseThrow(() ->
-                        new EntityNotFoundException(
-                                "Código de convite inválido"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Código de convite inválido"));
 
         Aluno aluno = alunoRepository.findById(alunoId)
-                .orElseThrow(() ->
-                        new EntityNotFoundException(
-                                "Aluno não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Aluno não encontrado"));
 
         if (!sala.getAlunos().contains(aluno)) {
             sala.getAlunos().add(aluno);
             salaRepository.save(sala);
+        }
+    }
+
+    public void validarProfessorDaSala(Long salaId, Long professorId) {
+
+        Sala sala = salaRepository.findById(salaId)
+                .orElseThrow(() -> new EntityNotFoundException("Sala não encontrada"));
+
+        if (sala.getProfessor() == null ||
+                !sala.getProfessor().getId().equals(professorId)) {
+
+            throw new AccessDeniedException(
+                    "Você não tem permissão para acessar esta sala");
         }
     }
 }

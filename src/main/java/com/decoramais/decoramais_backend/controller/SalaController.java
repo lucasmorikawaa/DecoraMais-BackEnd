@@ -65,7 +65,10 @@ public class SalaController {
     @PutMapping("/{id}")
     public ResponseEntity<SalaResponseDTO> updateSala(
             @PathVariable Long id,
-            @RequestBody @Valid SalaRequestDTO dados) {
+            @RequestBody @Valid SalaRequestDTO dados,
+            Authentication authentication) {
+
+        Usuario usuario = (Usuario) authentication.getPrincipal();
 
         Sala salaRequest = new Sala();
 
@@ -73,15 +76,22 @@ public class SalaController {
         salaRequest.setDisciplina(dados.disciplina());
         salaRequest.setAno(dados.ano());
 
-        Sala salaAtualizada = salaService.updateSala(id, salaRequest);
+        Sala salaAtualizada = salaService.updateSala(
+                id,
+                salaRequest,
+                usuario.getId());
 
         return ResponseEntity.ok(toResponseDTO(salaAtualizada));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSala(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSala(
+            @PathVariable Long id,
+            Authentication authentication) {
 
-        salaService.deleteSala(id);
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+
+        salaService.deleteSala(id, usuario.getId());
 
         return ResponseEntity.noContent().build();
     }
