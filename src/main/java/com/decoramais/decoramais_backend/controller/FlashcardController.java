@@ -98,4 +98,18 @@ public class FlashcardController {
                                 flashcard.getDataDisponibilidade(),
                                 salaIds);
         }
+
+        @GetMapping("/revisao")
+        public ResponseEntity<List<FlashcardResponseDTO>> buscarDisponiveisParaRevisao(
+                        Authentication authentication) {
+
+                Usuario usuario = (Usuario) authentication.getPrincipal();
+
+                List<FlashcardResponseDTO> flashcards = flashcardService.buscarDisponiveisParaRevisao(usuario.getId())
+                                .stream()
+                                .map(this::toResponseDTO)
+                                .toList();
+
+                return ResponseEntity.ok(flashcards);
+        }
 }
