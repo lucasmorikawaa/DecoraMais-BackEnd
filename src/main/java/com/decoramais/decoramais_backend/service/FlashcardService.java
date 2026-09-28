@@ -14,7 +14,6 @@ import com.decoramais.decoramais_backend.entity.Professor;
 import com.decoramais.decoramais_backend.entity.ProgressoFlashcard;
 import com.decoramais.decoramais_backend.repository.ProfessorRepository;
 import com.decoramais.decoramais_backend.repository.ProgressoFlashcardRepository;
-import com.decoramais.decoramais_backend.repository.ProgressoFlashcardRepository;
 
 import org.springframework.security.access.AccessDeniedException;
 
