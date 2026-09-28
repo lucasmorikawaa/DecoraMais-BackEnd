@@ -3,10 +3,12 @@ package com.decoramais.decoramais_backend.controller;
 import com.decoramais.decoramais_backend.dto.flashcard.FlashcardRequestDTO;
 import com.decoramais.decoramais_backend.dto.flashcard.FlashcardResponseDTO;
 import com.decoramais.decoramais_backend.entity.Flashcard;
+import com.decoramais.decoramais_backend.entity.Usuario;
 import com.decoramais.decoramais_backend.service.FlashcardService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,57 +19,83 @@ import java.util.List;
 @RequestMapping("/flashcards")
 public class FlashcardController {
 
-    private final FlashcardService flashcardService;
+        private final FlashcardService flashcardService;
 
-    public FlashcardController(FlashcardService flashcardService) {
-        this.flashcardService = flashcardService;
-    }
+        public FlashcardController(FlashcardService flashcardService) {
+                this.flashcardService = flashcardService;
+        }
 
-    @PostMapping
-    public ResponseEntity<FlashcardResponseDTO> criarFlashcard(
-            @RequestBody @Valid FlashcardRequestDTO dto) {
+        @PostMapping
+        public ResponseEntity<FlashcardResponseDTO> criarFlashcard(
+                        @RequestBody @Valid FlashcardRequestDTO dto,
+                        Authentication authentication) {
 
-        Flashcard novoFlashcard = flashcardService.criarEDistribuir(dto);
+                Usuario usuario = (Usuario) authentication.getPrincipal();
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(toResponseDTO(novoFlashcard));
-    }
+                Flashcard novoFlashcard = flashcardService
+                                .criarEDistribuir(dto, usuario.getId());
 
-    @GetMapping("/sala/{salaId}")
-    public ResponseEntity<List<FlashcardResponseDTO>> listarPorSala(
-            @PathVariable Long salaId) {
+                return ResponseEntity
+                                .status(HttpStatus.CREATED)
+                                .body(toResponseDTO(novoFlashcard));
+        }
 
-        List<FlashcardResponseDTO> flashcards = flashcardService
-                .listarPorSala(salaId)
-                .stream()
-                .map(this::toResponseDTO)
-                .toList();
+        @GetMapping("/sala/{salaId}")
+        public ResponseEntity<List<FlashcardResponseDTO>> listarPorSala(
+                        @PathVariable Long salaId,
+                        Authentication authentication) {
 
-        return ResponseEntity.ok(flashcards);
-    }
+                Usuario usuario = (Usuario) authentication.getPrincipal();
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarFlashcard(@PathVariable Long id) {
+                List<FlashcardResponseDTO> flashcards = flashcardService
+                                .listarPorSala(salaId, usuario)
+                                .stream()
+                                .map(this::toResponseDTO)
+                                .toList();
 
-        flashcardService.deletar(id);
+                return ResponseEntity.ok(flashcards);
+        }
 
-        return ResponseEntity.noContent().build();
-    }
+        @PutMapping("/{id}")
+        public ResponseEntity<FlashcardResponseDTO> atualizarFlashcard(
+                        @PathVariable Long id,
+                        @RequestBody @Valid FlashcardRequestDTO dto,
+                        Authentication authentication) {
 
-    private FlashcardResponseDTO toResponseDTO(Flashcard flashcard) {
+                Usuario usuario = (Usuario) authentication.getPrincipal();
 
-        List<Long> salaIds = flashcard.getSalas()
-                .stream()
-                .map(sala -> sala.getId())
-                .toList();
+                Flashcard flashcardAtualizado = flashcardService
+                                .atualizar(dto, id, usuario.getId());
 
-        return new FlashcardResponseDTO(
-                flashcard.getId(),
-                flashcard.getPergunta(),
-                flashcard.getResposta(),
-                flashcard.getDataCriacao(),
-                salaIds
-        );
-    }
+                return ResponseEntity.ok(toResponseDTO(flashcardAtualizado));
+        }
+
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deletarFlashcard(
+                        @PathVariable Long id,
+                        Authentication authentication) {
+
+                Usuario usuario = (Usuario) authentication.getPrincipal();
+
+                flashcardService.deletar(id, usuario.getId());
+
+                return ResponseEntity.noContent().build();
+        }
+
+        private FlashcardResponseDTO toResponseDTO(Flashcard flashcard) {
+
+                List<Long> salaIds = flashcard.getSalas()
+                                .stream()
+                                .map(sala -> sala.getId())
+                                .toList();
+
+                return new FlashcardResponseDTO(
+                                flashcard.getId(),
+                                flashcard.getPergunta(),
+                                flashcard.getResposta(),
+                                flashcard.getDataCriacao(),
+                                flashcard.getImagem(),
+                                flashcard.getDataDisponibilidade(),
+                                salaIds);
+        }
 }

@@ -9,6 +9,8 @@ public class FlashcardResponseDTO {
     private String pergunta;
     private String resposta;
     private LocalDate dataCriacao;
+    private String imagem;
+    private LocalDate dataDisponibilidade;
     private List<Long> salaIds;
 
     public FlashcardResponseDTO(
@@ -16,12 +18,16 @@ public class FlashcardResponseDTO {
             String pergunta,
             String resposta,
             LocalDate dataCriacao,
+            String imagem,
+            LocalDate dataDisponibilidade,
             List<Long> salaIds) {
 
         this.id = id;
         this.pergunta = pergunta;
         this.resposta = resposta;
         this.dataCriacao = dataCriacao;
+        this.imagem = imagem;
+        this.dataDisponibilidade = dataDisponibilidade;
         this.salaIds = salaIds;
     }
 
@@ -39,6 +45,14 @@ public class FlashcardResponseDTO {
 
     public LocalDate getDataCriacao() {
         return dataCriacao;
+    }
+
+    public String getImagem() {
+        return imagem;
+    }
+
+    public LocalDate getDataDisponibilidade() {
+        return dataDisponibilidade;
     }
 
     public List<Long> getSalaIds() {

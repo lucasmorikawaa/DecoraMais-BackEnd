@@ -28,6 +28,10 @@ public class Flashcard {
 
     private LocalDate dataCriacao;
 
+    private String imagem;
+
+    private LocalDate dataDisponibilidade;
+
     @ManyToMany
     @JoinTable(name = "flashcard_salas", joinColumns = @JoinColumn(name = "flashcard_id"), inverseJoinColumns = @JoinColumn(name = "sala_id"))
     private List<Sala> salas = new ArrayList<>();
