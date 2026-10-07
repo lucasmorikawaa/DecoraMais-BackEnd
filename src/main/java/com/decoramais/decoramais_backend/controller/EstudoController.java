@@ -1,6 +1,7 @@
 package com.decoramais.decoramais_backend.controller;
 
 import com.decoramais.decoramais_backend.dto.flashcard.AvaliacaoFlashcardDTO;
+import com.decoramais.decoramais_backend.dto.revisao.AvaliacaoFlashcardResponseDTO;
 import com.decoramais.decoramais_backend.entity.ProgressoFlashcard;
 import com.decoramais.decoramais_backend.entity.Usuario;
 import com.decoramais.decoramais_backend.service.EstudoService;
@@ -13,22 +14,28 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/estudo")
 public class EstudoController {
 
-    private final EstudoService estudoService;
+        private final EstudoService estudoService;
 
-    public EstudoController(EstudoService estudoService) {
-        this.estudoService = estudoService;
-    }
+        public EstudoController(EstudoService estudoService) {
+                this.estudoService = estudoService;
+        }
 
-    @PostMapping("/revisar")
-    public ResponseEntity<ProgressoFlashcard> revisarCard(
-            @RequestBody @Valid AvaliacaoFlashcardDTO dto,
-            Authentication authentication) {
+        @PostMapping("/revisar")
+        public ResponseEntity<AvaliacaoFlashcardResponseDTO> revisarCard(
+                        @RequestBody @Valid AvaliacaoFlashcardDTO dto,
+                        Authentication authentication) {
 
-        Usuario usuario = (Usuario) authentication.getPrincipal();
+                Usuario usuario = (Usuario) authentication.getPrincipal();
 
-        ProgressoFlashcard progressoAtualizado =
-                estudoService.processarAvaliacao(dto, usuario.getId());
+                ProgressoFlashcard progressoAtualizado = estudoService.processarAvaliacao(dto, usuario.getId());
 
-        return ResponseEntity.ok(progressoAtualizado);
-    }
+                AvaliacaoFlashcardResponseDTO resposta = new AvaliacaoFlashcardResponseDTO(
+                                progressoAtualizado.getFlashcard().getId(),
+                                progressoAtualizado.getRepeticoes(),
+                                progressoAtualizado.getFatorFacilidade(),
+                                progressoAtualizado.getIntervaloDias(),
+                                progressoAtualizado.getDataProximaRevisao());
+
+                return ResponseEntity.ok(resposta);
+        }
 }
