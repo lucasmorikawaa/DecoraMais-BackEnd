@@ -40,7 +40,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/salas")
+                        .requestMatchers(HttpMethod.GET, "/relatorios/**")
                         .hasRole("PROFESSOR")
 
                         .requestMatchers(HttpMethod.POST, "/salas/ingressar")
@@ -55,27 +55,27 @@ public class SecurityConfigurations {
                 .build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration
-    ) throws Exception {
+        @Bean
+        public AuthenticationManager authenticationManager(
+                AuthenticationConfiguration authenticationConfiguration
+        ) throws Exception {
 
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+                return authenticationConfiguration.getAuthenticationManager();
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public UserDetailsService userDetailsService(
-            UsuarioRepository usuarioRepository
-    ) {
+        @Bean
+        public UserDetailsService userDetailsService(
+                UsuarioRepository usuarioRepository
+        ) {
 
-        return username -> usuarioRepository.findByEmail(username)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("Usuário não encontrado")
-                );
-    }
-}
+                return username -> usuarioRepository.findByEmail(username)
+                        .orElseThrow(() ->
+                                new UsernameNotFoundException("Usuário não encontrado")
+                        );
+        }
+        }

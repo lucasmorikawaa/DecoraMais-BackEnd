@@ -1,8 +1,11 @@
 package com.decoramais.decoramais_backend.controller;
 
 import com.decoramais.decoramais_backend.dto.RelatorioTurmaDTO;
+import com.decoramais.decoramais_backend.entity.Usuario;
 import com.decoramais.decoramais_backend.service.RelatorioService;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +22,18 @@ public class RelatorioController {
     }
 
     @GetMapping("/sala/{salaId}")
-    public ResponseEntity<RelatorioTurmaDTO> obterRelatorioTurma(@PathVariable Long salaId) {
-        RelatorioTurmaDTO relatorio = relatorioService.gerarRelatorioDaTurma(salaId);
+    public ResponseEntity<RelatorioTurmaDTO> obterRelatorioTurma(
+            @PathVariable Long salaId,
+            Authentication authentication) {
+
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+
+        RelatorioTurmaDTO relatorio =
+                relatorioService.gerarRelatorioDaTurma(
+                        salaId,
+                        usuario.getId()
+                );
+
         return ResponseEntity.ok(relatorio);
     }
 }
