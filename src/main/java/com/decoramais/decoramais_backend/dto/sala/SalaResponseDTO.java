@@ -5,6 +5,8 @@ public record SalaResponseDTO(
         String nome,
         String disciplina,
         Integer ano,
-        String codigConvite
+        String codigConvite,
+        String professorNome,
+        Integer quantidadeAlunos
 ) {
 }

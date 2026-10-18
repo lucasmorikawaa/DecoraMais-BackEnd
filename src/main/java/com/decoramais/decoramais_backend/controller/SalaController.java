@@ -2,6 +2,7 @@ package com.decoramais.decoramais_backend.controller;
 
 import com.decoramais.decoramais_backend.dto.sala.SalaRequestDTO;
 import com.decoramais.decoramais_backend.dto.sala.SalaResponseDTO;
+import com.decoramais.decoramais_backend.entity.Professor;
 import com.decoramais.decoramais_backend.entity.Sala;
 import com.decoramais.decoramais_backend.service.SalaService;
 import jakarta.validation.Valid;
@@ -32,6 +33,20 @@ public class SalaController {
                 .toList();
 
         return ResponseEntity.ok(salas);
+    }
+
+    // Salas do usuário logado: do professor (que criou) ou do aluno (que ingressou)
+    @GetMapping("/minhas")
+    public ResponseEntity<List<SalaResponseDTO>> minhasSalas(Authentication authentication) {
+
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+
+        List<Sala> salas = (usuario instanceof Professor)
+                ? salaService.listarSalasDoProfessor(usuario.getId())
+                : salaService.listarSalasDoAluno(usuario.getId());
+
+        return ResponseEntity.ok(
+                salas.stream().map(this::toResponseDTO).toList());
     }
 
     @GetMapping("/{id}")
@@ -96,6 +111,12 @@ public class SalaController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/buscar/{codigo}")
+    public ResponseEntity<SalaResponseDTO> buscarPorCodigo(@PathVariable String codigo) {
+        Sala sala = salaService.buscarPorCodigo(codigo);
+        return ResponseEntity.ok(toResponseDTO(sala));
+    }
+
     @PostMapping("/ingressar")
     public ResponseEntity<String> ingressarNaSala(
             @RequestParam String codigo,
@@ -115,6 +136,8 @@ public class SalaController {
                 sala.getNome(),
                 sala.getDisciplina(),
                 sala.getAno(),
-                sala.getCodigConvite());
+                sala.getCodigConvite(),
+                sala.getProfessor() != null ? sala.getProfessor().getNome() : null,
+                sala.getAlunos() != null ? sala.getAlunos().size() : 0);
     }
 }

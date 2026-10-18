@@ -35,6 +35,14 @@ public class SalaService {
         return salaRepository.findAll();
     }
 
+    public List<Sala> listarSalasDoAluno(Long alunoId) {
+        return salaRepository.findByAlunosId(alunoId);
+    }
+
+    public List<Sala> listarSalasDoProfessor(Long professorId) {
+        return salaRepository.findByProfessorId(professorId);
+    }
+
     public Sala getSalaById(Long id) {
         return salaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -76,11 +84,15 @@ public class SalaService {
         salaRepository.deleteById(id);
     }
 
+    public Sala buscarPorCodigo(String codigo) {
+        return salaRepository.findByCodigConviteIgnoreCase(codigo.trim())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Nenhuma sala encontrada com esse código"));
+    }
+
     public void vincularAluno(String codigo, Long alunoId) {
 
-        Sala sala = salaRepository.findByCodigConvite(codigo)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Código de convite inválido"));
+        Sala sala = buscarPorCodigo(codigo);
 
         Aluno aluno = alunoRepository.findById(alunoId)
                 .orElseThrow(() -> new EntityNotFoundException(
