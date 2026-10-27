@@ -8,6 +8,7 @@ import com.decoramais.decoramais_backend.service.SalaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import com.decoramais.decoramais_backend.entity.Usuario;
 import org.springframework.security.core.Authentication;
@@ -24,15 +25,10 @@ public class SalaController {
         this.salaService = salaService;
     }
 
+    // Lista apenas as salas do usuário logado (não expõe salas de outros professores)
     @GetMapping
-    public ResponseEntity<List<SalaResponseDTO>> getAllSalas() {
-
-        List<SalaResponseDTO> salas = salaService.getAllSalas()
-                .stream()
-                .map(this::toResponseDTO)
-                .toList();
-
-        return ResponseEntity.ok(salas);
+    public ResponseEntity<List<SalaResponseDTO>> getAllSalas(Authentication authentication) {
+        return minhasSalas(authentication);
     }
 
     // Salas do usuário logado: do professor (que criou) ou do aluno (que ingressou)
@@ -49,10 +45,23 @@ public class SalaController {
                 salas.stream().map(this::toResponseDTO).toList());
     }
 
+    // Só o professor dono ou um aluno da sala pode abrir
     @GetMapping("/{id}")
-    public ResponseEntity<SalaResponseDTO> getSalaById(@PathVariable Long id) {
+    public ResponseEntity<SalaResponseDTO> getSalaById(
+            @PathVariable Long id,
+            Authentication authentication) {
 
+        Usuario usuario = (Usuario) authentication.getPrincipal();
         Sala sala = salaService.getSalaById(id);
+
+        boolean ehDono = sala.getProfessor() != null
+                && sala.getProfessor().getId().equals(usuario.getId());
+        boolean ehMembro = sala.getAlunos() != null && sala.getAlunos().stream()
+                .anyMatch(a -> a.getId().equals(usuario.getId()));
+
+        if (!ehDono && !ehMembro) {
+            throw new AccessDeniedException("Você não tem permissão para acessar esta sala");
+        }
 
         return ResponseEntity.ok(toResponseDTO(sala));
     }
