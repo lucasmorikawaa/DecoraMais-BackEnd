@@ -21,44 +21,42 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfigurations {
 
-    private final SecurityFilter securityFilter;
+        private final SecurityFilter securityFilter;
 
-    public SecurityConfigurations(SecurityFilter securityFilter) {
-        this.securityFilter = securityFilter;
-    }
+        public SecurityConfigurations(SecurityFilter securityFilter) {
+                this.securityFilter = securityFilter;
+        }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
-        return httpSecurity
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authorizeHttpRequests(authorize -> authorize
+                return httpSecurity
+                                .csrf(csrf -> csrf.disable())
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authorizeHttpRequests(authorize -> authorize
 
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/relatorios/**")
-                        .hasRole("PROFESSOR")
+                                                .requestMatchers(HttpMethod.GET, "/relatorios/**")
+                                                .hasRole("PROFESSOR")
 
-                        .requestMatchers(HttpMethod.POST, "/salas/ingressar")
-                        .hasRole("ALUNO")
+                                                .requestMatchers(HttpMethod.POST, "/salas/ingressar")
+                                                .hasRole("ALUNO")
 
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(
-                        securityFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                )
-                .build();
-    }
+                                                .requestMatchers("/loja/**").hasRole("ALUNO")
+
+                                                .anyRequest().authenticated())
+                                .addFilterBefore(
+                                                securityFilter,
+                                                UsernamePasswordAuthenticationFilter.class)
+                                .build();
+        }
 
         @Bean
         public AuthenticationManager authenticationManager(
-                AuthenticationConfiguration authenticationConfiguration
-        ) throws Exception {
+                        AuthenticationConfiguration authenticationConfiguration) throws Exception {
 
                 return authenticationConfiguration.getAuthenticationManager();
         }
@@ -70,12 +68,9 @@ public class SecurityConfigurations {
 
         @Bean
         public UserDetailsService userDetailsService(
-                UsuarioRepository usuarioRepository
-        ) {
+                        UsuarioRepository usuarioRepository) {
 
                 return username -> usuarioRepository.findByEmail(username)
-                        .orElseThrow(() ->
-                                new UsernameNotFoundException("Usuário não encontrado")
-                        );
+                                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
         }
-        }
+}

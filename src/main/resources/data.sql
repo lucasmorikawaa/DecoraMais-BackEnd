@@ -98,3 +98,59 @@ INSERT INTO FLASHCARD (id, frente, verso, data_criacao, deck_id) VALUES (2, 'Qua
 -- Registrando Progresso SRS do Aluno
 INSERT INTO PROGRESSO_SRS (id, aluno_id, flashcard_id, fator_facilidade, intervalo_dias, repeticoes_consecutivas, data_proxima_revisao) 
 VALUES (1, 2, 1, 2.5, 3, 2, TIMESTAMPADD(DAY, 3, CURRENT_TIMESTAMP));
+
+-- Itens iniciais da loja DecoraMais
+
+INSERT INTO itens_loja (nome, descricao, imagem, custo_xp, ativo)
+VALUES (
+    'Avatar Estudante',
+    'Um avatar especial para personalizar seu perfil.',
+    NULL,
+    20,
+    TRUE
+);
+
+INSERT INTO itens_loja (nome, descricao, imagem, custo_xp, ativo)
+VALUES (
+    'Avatar Gamer',
+    'Um avatar temático para seu perfil.',
+    NULL,
+    150,
+    TRUE
+);
+
+INSERT INTO itens_loja (nome, descricao, imagem, custo_xp, ativo)
+VALUES (
+    'Moldura Dourada',
+    'Uma moldura especial para destacar seu perfil.',
+    NULL,
+    200,
+    TRUE
+);
+
+INSERT INTO itens_loja (nome, descricao, imagem, custo_xp, ativo)
+VALUES (
+    'Tema Noturno',
+    'Um tema escuro para personalizar sua experiência.',
+    NULL,
+    250,
+    TRUE
+);
+
+INSERT INTO itens_loja (nome, descricao, imagem, custo_xp, ativo)
+VALUES (
+    'Moldura Diamante',
+    'Uma moldura exclusiva para alunos dedicados.',
+    NULL,
+    350,
+    TRUE
+);
+
+INSERT INTO itens_loja (nome, descricao, imagem, custo_xp, ativo)
+VALUES (
+    'Avatar Lendário',
+    'Um avatar especial para demonstrar sua evolução nos estudos.',
+    NULL,
+    500,
+    TRUE
+);
