@@ -105,7 +105,8 @@ public class EstudoService {
                 ProgressoFlashcard resultado = progressoRepository.save(progresso);
 
                 gamificationService.processarGamificacao(
-                                progresso.getAluno());
+                                progresso.getAluno(),
+                                dto.dificuldade());
 
                 return resultado;
         }
