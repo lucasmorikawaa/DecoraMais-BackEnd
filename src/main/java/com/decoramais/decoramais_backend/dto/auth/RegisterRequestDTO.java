@@ -1,22 +1,19 @@
+
 package com.decoramais.decoramais_backend.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public record RegisterRequestDTO(
 
-        @NotBlank(message = "O nome é obrigatório")
-        String nome,
+                @NotBlank(message = "O nome é obrigatório") String nome,
 
-        @NotBlank(message = "O email é obrigatório")
-        @Email(message = "Informe um email válido")
-        String email,
+                @NotBlank(message = "O email é obrigatório") @Email(message = "Informe um email válido") String email,
 
-        @NotBlank(message = "A senha é obrigatória")
-        String senha,
+                @NotBlank(message = "A senha é obrigatória") @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9\\s])\\S{8,}$", message = "A senha deve ter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial") String senha,
 
-        @NotBlank(message = "O tipo de usuário é obrigatório")
-        String tipo
+                @NotBlank(message = "O tipo de usuário é obrigatório") String tipo
 
 ) {
 }
